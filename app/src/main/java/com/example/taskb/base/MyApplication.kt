@@ -1,4 +1,4 @@
-package com.example.taskb
+package com.example.taskb.base
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

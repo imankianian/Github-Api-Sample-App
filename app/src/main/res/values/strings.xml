@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Task B</string>
+    <string name="github_api_url">https://api.github.com</string>
 </resources>
