@@ -1,4 +1,4 @@
-package com.example.taskb.model
+package com.example.taskb.data.model
 
 import com.google.gson.annotations.SerializedName
 

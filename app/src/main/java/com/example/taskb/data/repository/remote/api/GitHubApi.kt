@@ -1,6 +1,6 @@
-package com.example.taskb.api
+package com.example.taskb.data.repository.remote.api
 
-import com.example.taskb.model.User
+import com.example.taskb.data.model.User
 import retrofit2.Response
 import retrofit2.http.GET
 
