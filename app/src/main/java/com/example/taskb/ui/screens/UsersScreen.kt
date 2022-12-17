@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
@@ -27,10 +25,10 @@ import com.example.taskb.ui.theme.BrilliantAzure
 import com.example.taskb.ui.viewmodel.UsersViewModel
 
 @Composable
-fun UsersScreen(viewModel: UsersViewModel) {
+fun UsersScreen(viewModel: UsersViewModel, onNavigateToDetails: (login: String) -> Unit) {
     when (val usersUiState = viewModel.usersUiState) {
         is UsersUiState.Loading -> UsersLoadingScreen()
-        is UsersUiState.Success -> UsersListScreen(users = usersUiState.users)
+        is UsersUiState.Success -> UsersListScreen(users = usersUiState.users, onNavigateToDetails)
         is UsersUiState.Error -> UsersErrorScreen(message = usersUiState.message)
     }
 }
@@ -57,19 +55,21 @@ fun UsersErrorScreen(message: String) {
 }
 
 @Composable
-fun UsersListScreen(users: List<User>) {
+fun UsersListScreen(users: List<User>, onNavigateToDetails: (login: String) -> Unit) {
     LazyColumn(modifier = Modifier
         .padding(10.dp)
         .background(Color.White)) {
         items(users) { user ->
-            UserCard(user = user)
+            UserCard(user = user, onNavigateToDetails)
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserCard(user: User) {
-    Card(modifier = Modifier.padding(bottom = 20.dp)) {
+fun UserCard(user: User, onNavigateToDetails: (login: String) -> Unit) {
+    Card(onClick = { onNavigateToDetails(user.loginName) },
+        modifier = Modifier.padding(bottom = 20.dp)) {
         Row(modifier = Modifier
             .height(40.dp)
             .fillMaxWidth()

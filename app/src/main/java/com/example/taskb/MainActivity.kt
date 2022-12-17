@@ -10,8 +10,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.taskb.ui.screens.UserReposScreen
 import com.example.taskb.ui.screens.UsersScreen
 import com.example.taskb.ui.theme.TaskBTheme
+import com.example.taskb.ui.viewmodel.UserReposViewModel
 import com.example.taskb.ui.viewmodel.UsersViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -26,11 +28,16 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
+                    val usersViewModel = hiltViewModel<UsersViewModel>()
                     val navController = rememberNavController()
                     NavHost(navController = navController, startDestination = Routes.Home.route) {
                         composable(Routes.Home.route) {
-                            val usersViewModel = hiltViewModel<UsersViewModel>()
                             UsersScreen(usersViewModel)
+                                { login -> navController.navigate("repo/$login") }
+                        }
+                        composable(Routes.Repos.route) {
+                            val userReposViewModel = hiltViewModel<UserReposViewModel>()
+                            UserReposScreen(userReposViewModel) { htmlUrl -> }
                         }
                     }
                 }
@@ -41,4 +48,5 @@ class MainActivity : ComponentActivity() {
 
 sealed class Routes(val route: String) {
     object Home: Routes("home")
+    object Repos: Routes("repo/{login}")
 }

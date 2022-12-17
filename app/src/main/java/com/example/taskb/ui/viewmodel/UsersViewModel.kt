@@ -7,13 +7,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.taskb.data.repository.UsersRepository
-import com.example.taskb.data.repository.remote.UsersApiResult
+import com.example.taskb.data.repository.remote.ApiResult
 import com.example.taskb.ui.UsersUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-const val TASKB_VIEWMODEL = "TASKB_VIEWMODEL"
+const val USERS_VIEWMODEL = "USERS_VIEWMODEL"
 
 @HiltViewModel
 class UsersViewModel @Inject constructor(private val usersRepository: UsersRepository): ViewModel() {
@@ -29,17 +29,17 @@ class UsersViewModel @Inject constructor(private val usersRepository: UsersRepos
         viewModelScope.launch {
             usersUiState = UsersUiState.Loading
             when (val result = usersRepository.getUsers()) {
-                is UsersApiResult.ApiSuccess -> {
+                is ApiResult.ApiSuccess -> {
                     usersUiState = UsersUiState.Success(result.data)
-                    Log.d(TASKB_VIEWMODEL, "listUsers => Success, list size:${result.data.size}")
+                    Log.d(USERS_VIEWMODEL, "listUsers => Success, list size:${result.data.size}")
                 }
-                is UsersApiResult.ApiError -> {
+                is ApiResult.ApiError -> {
                     usersUiState = UsersUiState.Error(result.message ?: result.code.toString())
-                    Log.d(TASKB_VIEWMODEL, "listUsers => Error: ${result.code}, ${result.message}")
+                    Log.d(USERS_VIEWMODEL, "listUsers => Error: ${result.code}, ${result.message}")
                 }
-                is UsersApiResult.ApiException -> {
+                is ApiResult.ApiException -> {
                     usersUiState = UsersUiState.Error(result.throwable.localizedMessage ?: "Exception")
-                    Log.d(TASKB_VIEWMODEL, "listUsers => Exception: ${result.throwable.message}")
+                    Log.d(USERS_VIEWMODEL, "listUsers => Exception: ${result.throwable.message}")
                 }
             }
         }
