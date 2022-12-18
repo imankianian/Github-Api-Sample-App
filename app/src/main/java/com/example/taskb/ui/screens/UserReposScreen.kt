@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.taskb.R
@@ -70,22 +69,25 @@ fun UserReposListScreen(repos: List<Repo>, onNavigateToDetails: (login: String) 
 @Composable
 fun RepoCard(repo: Repo, onNavigateToDetails: (login: String) -> Unit) {
     Card(onClick = { onNavigateToDetails(repo.htmlUrl) }) {
-        Column(modifier = Modifier
+        Row(modifier = Modifier
             .fillMaxWidth()
             .background(Color.White)) {
-            Row() {
-                Spacer(modifier = Modifier.size(20.dp))
-                Column() {
-                    RepoName(name = repo.name)
-                    RepoUpdateDate(date = repo.lastUpdate)
-                    Spacer(modifier = Modifier.size(5.dp))
-                    Row() {
-                        RepoStar(count = repo.stars)
-                        Spacer(modifier = Modifier.size(15.dp))
-                        RepoLanguage(language = repo.language ?: "Unknown")
-                    }
-                }
-            }
+            Spacer(modifier = Modifier.size(20.dp))
+            DisplaySingleRepo(repo = repo)
+        }
+    }
+}
+
+@Composable
+fun DisplaySingleRepo(repo: Repo) {
+    Column() {
+        RepoName(name = repo.name)
+        RepoUpdateDate(date = repo.lastUpdate)
+        Spacer(modifier = Modifier.size(5.dp))
+        Row() {
+            RepoStar(count = repo.stars)
+            Spacer(modifier = Modifier.size(15.dp))
+            RepoLanguage(language = repo.language ?: "Unknown")
         }
     }
 }
@@ -112,10 +114,9 @@ fun RepoUpdateDate(date: String) {
 fun RepoStar(count: Int) {
     Row() {
         Image(painter = painterResource(id = R.drawable.ic_star),
-            modifier = Modifier
-                .width(15.dp)
-                .height(20.dp),
-            contentDescription = "stars")
+            contentDescription = "stars",
+            modifier = Modifier.width(15.dp).height(20.dp)
+            )
         Spacer(modifier = Modifier.size(5.dp))
         Text(text = count.toString(),
             color = Color.Gray,
@@ -129,8 +130,9 @@ fun RepoStar(count: Int) {
 fun RepoLanguage(language: String) {
     Row() {
         Image(painterResource(id = R.drawable.ic_language),
-        modifier = Modifier.width(15.dp).height(20.dp),
-        contentDescription = "programming language")
+            contentDescription = "programming language",
+            modifier = Modifier.width(15.dp).height(20.dp)
+        )
     }
     Spacer(modifier = Modifier.size(5.dp))
     Text(text = language,
