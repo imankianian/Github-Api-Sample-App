@@ -96,7 +96,7 @@ fun UserAvatar(user: User) {
 @Composable
 fun UserLoginName(user: User) {
     Text(text = user.loginName,
-        color = BrilliantAzure,
+        color = Color.Black,
         fontSize = 18.sp,
         modifier = Modifier
             .fillMaxWidth()
