@@ -1,5 +1,7 @@
 package com.example.taskb
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -37,7 +39,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Routes.Repos.route) {
                             val userReposViewModel = hiltViewModel<UserReposViewModel>()
-                            UserReposScreen(userReposViewModel) { htmlUrl -> }
+                            UserReposScreen(userReposViewModel) { htmlUrl ->
+                                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(htmlUrl)))
+                            }
                         }
                     }
                 }
