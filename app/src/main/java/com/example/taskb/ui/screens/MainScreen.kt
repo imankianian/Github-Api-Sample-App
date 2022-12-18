@@ -19,22 +19,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.taskb.data.model.User
-import com.example.taskb.ui.UsersUiState
-import com.example.taskb.ui.theme.BrilliantAzure
-import com.example.taskb.ui.viewmodel.UsersViewModel
+import com.example.taskb.repository.remote.model.User
+import com.example.taskb.ui.state.MainUiState
+import com.example.taskb.ui.viewmodel.MainViewModel
 
 @Composable
-fun UsersScreen(viewModel: UsersViewModel, onNavigateToDetails: (login: String) -> Unit) {
-    when (val usersUiState = viewModel.usersUiState) {
-        is UsersUiState.Loading -> UsersLoadingScreen()
-        is UsersUiState.Success -> UsersListScreen(users = usersUiState.users, onNavigateToDetails)
-        is UsersUiState.Error -> UsersErrorScreen(message = usersUiState.message)
+fun MainScreen(mainViewModel: MainViewModel, onNavigateToDetails: (login: String) -> Unit) {
+    when (val mainUiState = mainViewModel.mainUiState) {
+        is MainUiState.Loading -> MainLoadingScreen()
+        is MainUiState.Success -> UsersListScreen(users = mainUiState.users, onNavigateToDetails)
+        is MainUiState.Error -> MainErrorScreen(message = mainUiState.message)
     }
 }
 
 @Composable
-fun UsersLoadingScreen() {
+fun MainLoadingScreen() {
     Box(modifier = Modifier
         .fillMaxWidth()
         .fillMaxHeight(),
@@ -45,7 +44,7 @@ fun UsersLoadingScreen() {
 }
 
 @Composable
-fun UsersErrorScreen(message: String) {
+fun MainErrorScreen(message: String) {
     Text(text = message,
         textAlign = TextAlign.Center,
         modifier = Modifier

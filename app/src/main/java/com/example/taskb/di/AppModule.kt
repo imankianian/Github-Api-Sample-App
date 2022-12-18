@@ -3,7 +3,7 @@ package com.example.taskb.di
 import android.app.Application
 import android.util.Log
 import com.example.taskb.R
-import com.example.taskb.data.repository.remote.api.GitHubApi
+import com.example.taskb.repository.remote.api.GitHubApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

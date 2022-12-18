@@ -1,11 +1,11 @@
-package com.example.taskb.data.repository.remote
+package com.example.taskb.repository.remote
 
-import com.example.taskb.data.model.Repo
-import com.example.taskb.data.repository.remote.api.GitHubApi
-import com.example.taskb.data.model.User
+import com.example.taskb.repository.remote.model.Repo
+import com.example.taskb.repository.remote.api.GitHubApi
+import com.example.taskb.repository.remote.model.User
 import javax.inject.Inject
 
-class UsersRemoteDataSourceImpl @Inject constructor(private val gitHubApi: GitHubApi): UsersRemoteDataSource {
+class RemoteDataSourceImpl @Inject constructor(private val gitHubApi: GitHubApi): RemoteDataSource {
 
     override suspend fun getUsers(): ApiResult<List<User>> {
         return try {

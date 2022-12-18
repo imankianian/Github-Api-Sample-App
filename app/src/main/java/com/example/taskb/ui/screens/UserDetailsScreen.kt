@@ -15,21 +15,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.taskb.R
-import com.example.taskb.data.model.Repo
-import com.example.taskb.ui.ReposUiState
-import com.example.taskb.ui.viewmodel.UserReposViewModel
+import com.example.taskb.repository.remote.model.Repo
+import com.example.taskb.ui.state.UserDetailsUiState
+import com.example.taskb.ui.viewmodel.UserDetailsViewModel
 
 @Composable
-fun UserReposScreen(viewModel: UserReposViewModel, onNavigateToDetails: (login: String) -> Unit) {
-    when (val reposUiState = viewModel.reposUiState) {
-        is ReposUiState.Loading -> UserReposLoadingScreen()
-        is ReposUiState.Success -> UserReposListScreen(repos = reposUiState.repos, onNavigateToDetails)
-        is ReposUiState.Error -> UserReposErrorScreen(message = reposUiState.message)
+fun UserDetailsScreen(userDetailsViewModel: UserDetailsViewModel, onNavigateToDetails: (login: String) -> Unit) {
+    when (val userDetailsUiState = userDetailsViewModel.userDetailsUiState) {
+        is UserDetailsUiState.Loading -> ReposLoadingScreen()
+        is UserDetailsUiState.Success -> ReposListScreen(repos = userDetailsUiState.repos, onNavigateToDetails)
+        is UserDetailsUiState.Error -> ReposErrorScreen(message = userDetailsUiState.message)
     }
 }
 
 @Composable
-fun UserReposLoadingScreen() {
+fun ReposLoadingScreen() {
     Box(modifier = Modifier
         .fillMaxWidth()
         .fillMaxHeight(),
@@ -41,7 +41,7 @@ fun UserReposLoadingScreen() {
 }
 
 @Composable
-fun UserReposErrorScreen(message: String) {
+fun ReposErrorScreen(message: String) {
     Text(text = message,
         textAlign = TextAlign.Center,
         modifier = Modifier
@@ -51,7 +51,7 @@ fun UserReposErrorScreen(message: String) {
 }
 
 @Composable
-fun UserReposListScreen(repos: List<Repo>, onNavigateToDetails: (login: String) -> Unit) {
+fun ReposListScreen(repos: List<Repo>, onNavigateToDetails: (login: String) -> Unit) {
     LazyColumn(modifier = Modifier.background(Color.White)) {
         items(repos) { repo ->
             Spacer(modifier = Modifier.size(10.dp))
@@ -73,13 +73,13 @@ fun RepoCard(repo: Repo, onNavigateToDetails: (login: String) -> Unit) {
             .fillMaxWidth()
             .background(Color.White)) {
             Spacer(modifier = Modifier.size(20.dp))
-            DisplaySingleRepo(repo = repo)
+            DisplayRepo(repo = repo)
         }
     }
 }
 
 @Composable
-fun DisplaySingleRepo(repo: Repo) {
+fun DisplayRepo(repo: Repo) {
     Column() {
         RepoName(name = repo.name)
         RepoUpdateDate(date = repo.lastUpdate)

@@ -1,4 +1,4 @@
-package com.example.taskb.data.repository.remote
+package com.example.taskb.repository.remote
 
 sealed interface ApiResult<T: Any> {
 

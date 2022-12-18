@@ -1,9 +1,9 @@
 package com.example.taskb.di
 
-import com.example.taskb.data.repository.remote.UsersRemoteDataSource
-import com.example.taskb.data.repository.remote.UsersRemoteDataSourceImpl
-import com.example.taskb.data.repository.UsersRepository
-import com.example.taskb.data.repository.UsersRepositoryImpl
+import com.example.taskb.repository.remote.RemoteDataSource
+import com.example.taskb.repository.remote.RemoteDataSourceImpl
+import com.example.taskb.repository.Repository
+import com.example.taskb.repository.RepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -16,10 +16,10 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindUsersRemoteDataSource(usersRemoteDataSourceImpl: UsersRemoteDataSourceImpl):
-            UsersRemoteDataSource
+    abstract fun bindUsersRemoteDataSource(usersRemoteDataSourceImpl: RemoteDataSourceImpl):
+            RemoteDataSource
 
     @Binds
     @Singleton
-    abstract fun bindUsersRepository(usersRepositoryImpl: UsersRepositoryImpl): UsersRepository
+    abstract fun bindUsersRepository(repositoryImpl: RepositoryImpl): Repository
 }
