@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
             TaskBTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.fillMaxSize()
                 ) {
                     val usersViewModel = hiltViewModel<UsersViewModel>()
                     val navController = rememberNavController()
