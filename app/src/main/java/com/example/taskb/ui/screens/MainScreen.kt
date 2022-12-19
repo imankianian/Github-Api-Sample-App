@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -16,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -76,6 +78,7 @@ fun UserCard(user: LocalUser, onNavigateToDetails: (login: String) -> Unit) {
             .height(40.dp)
             .fillMaxWidth()
             .background(Color.White),
+            verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start) {
             UserAvatar(user = user)
             UserLoginName(user = user)
@@ -100,6 +103,7 @@ fun UserLoginName(user: LocalUser) {
     Text(text = user.login,
         color = Color.Black,
         fontSize = 18.sp,
+        fontWeight = FontWeight.Normal,
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()

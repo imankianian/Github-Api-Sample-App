@@ -67,7 +67,7 @@ fun ReposListScreen(localRepos: List<LocalRepo>, onNavigateToDetails: (login: St
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RepoCard(localRepo: LocalRepo, onNavigateToDetails: (login: String) -> Unit) {
+fun RepoCard(localRepo: LocalRepo , onNavigateToDetails: (login: String) -> Unit ) {
     Card(onClick = { onNavigateToDetails(localRepo.htmlUrl) }) {
         Row(modifier = Modifier
             .fillMaxWidth()
@@ -84,7 +84,7 @@ fun DisplayRepo(localRepo: LocalRepo) {
         RepoName(name = localRepo.name)
         RepoUpdateDate(date = localRepo.lastUpdate)
         Spacer(modifier = Modifier.size(5.dp))
-        Row() {
+        Row(verticalAlignment = Alignment.CenterVertically) {
             RepoStar(count = localRepo.stars)
             Spacer(modifier = Modifier.size(15.dp))
             RepoLanguage(language = localRepo.language ?: "Unknown")
@@ -112,11 +112,10 @@ fun RepoUpdateDate(date: String) {
 
 @Composable
 fun RepoStar(count: Int) {
-    Row() {
+    Row(verticalAlignment = Alignment.CenterVertically) {
         Image(painter = painterResource(id = R.drawable.ic_star),
             contentDescription = "stars",
-            modifier = Modifier.width(15.dp).height(20.dp)
-            )
+        modifier = Modifier.height(20.dp))
         Spacer(modifier = Modifier.size(5.dp))
         Text(text = count.toString(),
             color = Color.Gray,
@@ -128,11 +127,11 @@ fun RepoStar(count: Int) {
 
 @Composable
 fun RepoLanguage(language: String) {
-    Row() {
+    Row(verticalAlignment = Alignment.CenterVertically) {
         Image(painterResource(id = R.drawable.ic_language),
             contentDescription = "programming language",
-            modifier = Modifier.width(15.dp).height(20.dp)
-        )
+        modifier = Modifier.height(20.dp))
+
     }
     Spacer(modifier = Modifier.size(5.dp))
     Text(text = language,
