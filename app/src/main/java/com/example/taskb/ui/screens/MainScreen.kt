@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -32,7 +33,7 @@ import com.example.taskb.ui.viewmodel.MainViewModel
 fun MainScreen(mainViewModel: MainViewModel, onNavigateToDetails: (login: String) -> Unit) {
     when (val mainUiState = mainViewModel.mainUiState) {
         is MainUiState.Loading -> MainLoadingScreen()
-        is MainUiState.Success -> UsersListScreen(localUsers = mainUiState.localUsers, onNavigateToDetails)
+        is MainUiState.Success -> MainScreenContent(localUsers = mainUiState.localUsers, onNavigateToDetails)
         is MainUiState.Error -> MainErrorScreen(message = mainUiState.message)
     }
 }
@@ -44,7 +45,9 @@ fun MainLoadingScreen() {
         .fillMaxHeight(),
         contentAlignment = Center) {
         Image(painter = painterResource(id = R.drawable.ic_github_mark), contentDescription = "Github logo",
-        modifier = Modifier.width(100.dp).height(100.dp))
+        modifier = Modifier
+            .width(100.dp)
+            .height(100.dp))
     }
 }
 
@@ -58,13 +61,45 @@ fun MainErrorScreen(message: String) {
             .wrapContentHeight(CenterVertically))
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MainScreenContent(localUsers: List<LocalUser>, onNavigateToDetails: (login: String) -> Unit) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = stringResource(id = R.string.users),
+                        fontSize = 23.sp,
+                    fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(start = 20.dp)
+                    )
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.White,
+                    titleContentColor = Color.Black,
+                ),
+            )
+        }, content = {
+            Column(modifier = Modifier.padding(it)) {
+                Divider(color = MaterialTheme.colorScheme.onSurface.copy(0.05f),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp))
+                UsersListScreen(localUsers = localUsers, onNavigateToDetails = onNavigateToDetails)
+            }
+        }
+    )
+}
+
 @Composable
 fun UsersListScreen(localUsers: List<LocalUser>, onNavigateToDetails: (login: String) -> Unit) {
-    LazyColumn(modifier = Modifier
-        .padding(10.dp)
-        .background(Color.White)) {
-        items(localUsers) { user ->
-            UserCard(user = user, onNavigateToDetails)
+    Column() {
+        LazyColumn(modifier = Modifier
+            .padding(10.dp)
+            .background(Color.White)) {
+            items(localUsers) { user ->
+                UserCard(user = user, onNavigateToDetails)
+            }
         }
     }
 }
@@ -94,7 +129,10 @@ fun UserAvatar(user: LocalUser) {
             .build(),
             contentDescription = user.login,
             contentScale = ContentScale.Fit,
-            modifier = Modifier.width(40.dp).height(40.dp).clip(CircleShape)
+            modifier = Modifier
+                .width(40.dp)
+                .height(40.dp)
+                .clip(CircleShape)
         )
 }
 

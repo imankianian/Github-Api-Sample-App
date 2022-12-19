@@ -39,8 +39,10 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Routes.Repos.route) {
                             val userDetailsViewModel = hiltViewModel<UserDetailsViewModel>()
-                            UserDetailsScreen(userDetailsViewModel) { htmlUrl ->
+                            UserDetailsScreen(userDetailsViewModel, { htmlUrl ->
                                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(htmlUrl)))
+                            }) {
+                                navController.navigateUp()
                             }
                         }
                     }

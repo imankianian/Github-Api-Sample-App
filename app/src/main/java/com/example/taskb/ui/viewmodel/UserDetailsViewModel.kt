@@ -20,7 +20,7 @@ import javax.inject.Inject
 class UserDetailsViewModel @Inject constructor(private val repository: Repository,
                                            savedStateHandle: SavedStateHandle): ViewModel() {
 
-    private val login = savedStateHandle.get<String>("login")
+    val login = savedStateHandle.get<String>("login")
     var userDetailsUiState: UserDetailsUiState by mutableStateOf(UserDetailsUiState.Loading)
         private set
 
