@@ -11,6 +11,7 @@ import com.example.taskb.TAG
 import com.example.taskb.repository.Repository
 import com.example.taskb.ui.state.MainUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,6 +20,8 @@ class MainViewModel @Inject constructor(private val repository: Repository): Vie
 
     var mainUiState: MainUiState by mutableStateOf(MainUiState.Loading)
         private set
+
+    private var connectionLost = false
 
     init {
         listUsers()
@@ -32,12 +35,18 @@ class MainViewModel @Inject constructor(private val repository: Repository): Vie
                     mainUiState = MainUiState.Loading
                 }
                 is UsersResult.Success -> {
+                    connectionLost = false
                     mainUiState = MainUiState.Success(result.users)
                     Log.d(TAG, "listUsers => Success, list size:${result.users.size}")
                 }
                 is UsersResult.Error -> {
                     mainUiState = MainUiState.Error(result.message)
                     Log.d(TAG, "listUsers => Error: ${result.message}")
+                    connectionLost = true
+                    delay(5000)
+                    if (connectionLost) {
+                        listUsers()
+                    }
                 }
             }
         }

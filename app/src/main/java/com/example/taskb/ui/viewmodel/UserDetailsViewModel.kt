@@ -13,6 +13,7 @@ import com.example.taskb.convert
 import com.example.taskb.repository.Repository
 import com.example.taskb.ui.state.UserDetailsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,6 +24,8 @@ class UserDetailsViewModel @Inject constructor(private val repository: Repositor
     val login = savedStateHandle.get<String>("login")
     var userDetailsUiState: UserDetailsUiState by mutableStateOf(UserDetailsUiState.Loading)
         private set
+
+    private var connectionLost = false
 
     init {
        login?.let { listUserRepos(login) }
@@ -37,12 +40,18 @@ class UserDetailsViewModel @Inject constructor(private val repository: Repositor
                     userDetailsUiState = UserDetailsUiState.Loading
                 }
                 is ReposResult.Success -> {
+                    connectionLost = false
                     userDetailsUiState = UserDetailsUiState.Success(result.users.convert())
                     Log.d(TAG, "listRepos => Success, list size:${result.users.size}")
                 }
                 is ReposResult.Error -> {
                     userDetailsUiState = UserDetailsUiState.Error(result.message)
                     Log.d(TAG, "listRepos => Error: ${result.message}")
+                    connectionLost = true
+                    delay(5000)
+                    if (connectionLost) {
+                        listUserRepos(login)
+                    }
                 }
             }
         }
