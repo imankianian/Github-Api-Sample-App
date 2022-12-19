@@ -18,10 +18,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.rememberNavController
 import com.example.taskb.R
 import com.example.taskb.repository.local.model.LocalRepo
-import com.example.taskb.repository.local.model.LocalUser
 import com.example.taskb.ui.state.UserDetailsUiState
 import com.example.taskb.ui.viewmodel.UserDetailsViewModel
 
@@ -30,33 +28,16 @@ fun UserDetailsScreen(userDetailsViewModel: UserDetailsViewModel,
                       onNavigateToDetails: (login: String) -> Unit,
                         onBackPressed: () -> Unit) {
     when (val userDetailsUiState = userDetailsViewModel.userDetailsUiState) {
-        is UserDetailsUiState.Loading -> ReposLoadingScreen()
+        is UserDetailsUiState.Loading -> LoadingScreen {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .wrapContentHeight(Alignment.CenterVertically)
+            )
+        }
         is UserDetailsUiState.Success -> UserDetailsContent(userDetailsViewModel.login ?: "",
             localRepos = userDetailsUiState.localRepos, onNavigateToDetails, onBackPressed)
-        is UserDetailsUiState.Error -> ReposErrorScreen(message = userDetailsUiState.message)
+        is UserDetailsUiState.Error -> ErrorScreen(message = userDetailsUiState.message)
     }
-}
-
-@Composable
-fun ReposLoadingScreen() {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .fillMaxHeight(),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator(modifier = Modifier
-            .wrapContentHeight(Alignment.CenterVertically))
-    }
-}
-
-@Composable
-fun ReposErrorScreen(message: String) {
-    Text(text = message,
-        textAlign = TextAlign.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .wrapContentHeight(Alignment.CenterVertically))
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

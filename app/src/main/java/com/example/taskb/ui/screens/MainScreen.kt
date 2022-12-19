@@ -9,7 +9,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,7 +18,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -32,33 +30,15 @@ import com.example.taskb.ui.viewmodel.MainViewModel
 @Composable
 fun MainScreen(mainViewModel: MainViewModel, onNavigateToDetails: (login: String) -> Unit) {
     when (val mainUiState = mainViewModel.mainUiState) {
-        is MainUiState.Loading -> MainLoadingScreen()
+        is MainUiState.Loading -> LoadingScreen {
+            Image(painter = painterResource(id = R.drawable.ic_github_mark), contentDescription = "Github logo",
+                modifier = Modifier
+                    .width(100.dp)
+                    .height(100.dp))
+        }
         is MainUiState.Success -> MainScreenContent(localUsers = mainUiState.localUsers, onNavigateToDetails)
-        is MainUiState.Error -> MainErrorScreen(message = mainUiState.message)
+        is MainUiState.Error -> ErrorScreen(message = mainUiState.message)
     }
-}
-
-@Composable
-fun MainLoadingScreen() {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .fillMaxHeight(),
-        contentAlignment = Center) {
-        Image(painter = painterResource(id = R.drawable.ic_github_mark), contentDescription = "Github logo",
-        modifier = Modifier
-            .width(100.dp)
-            .height(100.dp))
-    }
-}
-
-@Composable
-fun MainErrorScreen(message: String) {
-    Text(text = message,
-        textAlign = TextAlign.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .wrapContentHeight(CenterVertically))
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
