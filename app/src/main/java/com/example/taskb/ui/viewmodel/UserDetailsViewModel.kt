@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.taskb.ReposResult
 import com.example.taskb.TAG
+import com.example.taskb.convert
 import com.example.taskb.repository.Repository
 import com.example.taskb.ui.state.UserDetailsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,7 +37,7 @@ class UserDetailsViewModel @Inject constructor(private val repository: Repositor
                     userDetailsUiState = UserDetailsUiState.Loading
                 }
                 is ReposResult.Success -> {
-                    userDetailsUiState = UserDetailsUiState.Success(result.users)
+                    userDetailsUiState = UserDetailsUiState.Success(result.users.convert())
                     Log.d(TAG, "listRepos => Success, list size:${result.users.size}")
                 }
                 is ReposResult.Error -> {

@@ -4,6 +4,7 @@ import com.example.taskb.repository.local.model.LocalRepo
 import com.example.taskb.repository.local.model.LocalUser
 import com.example.taskb.repository.remote.model.RemoteRepo
 import com.example.taskb.repository.remote.model.RemoteUser
+import java.text.SimpleDateFormat
 
 const val TAG = "TASK_B"
 
@@ -43,3 +44,25 @@ fun List<RemoteRepo>.remoteRepoToLocalRepo(login: String): List<LocalRepo> {
     return localRepos
 }
 
+fun List<LocalRepo>.convert(): List<LocalRepo> = map {
+    LocalRepo(
+        id = it.id,
+        name = it.name,
+        lastUpdate = it.lastUpdate.formattedDate(),
+        stars = it.stars,
+        language = it.language,
+        htmlUrl = it.htmlUrl,
+        login = it.login
+    )
+}
+
+fun String.formattedDate(): String {
+    return try {
+        val oldFormat = SimpleDateFormat("yyyy-mm-dd")
+        val date = oldFormat.parse(this)
+        val newFormat = SimpleDateFormat("mm-dd-yyyy")
+        newFormat.format(date)
+    } catch (e: Exception) {
+        this
+    }
+}
