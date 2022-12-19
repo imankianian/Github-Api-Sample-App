@@ -15,7 +15,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.taskb.R
-import com.example.taskb.repository.remote.model.Repo
+import com.example.taskb.repository.local.model.LocalRepo
 import com.example.taskb.ui.state.UserDetailsUiState
 import com.example.taskb.ui.viewmodel.UserDetailsViewModel
 
@@ -23,7 +23,7 @@ import com.example.taskb.ui.viewmodel.UserDetailsViewModel
 fun UserDetailsScreen(userDetailsViewModel: UserDetailsViewModel, onNavigateToDetails: (login: String) -> Unit) {
     when (val userDetailsUiState = userDetailsViewModel.userDetailsUiState) {
         is UserDetailsUiState.Loading -> ReposLoadingScreen()
-        is UserDetailsUiState.Success -> ReposListScreen(repos = userDetailsUiState.repos, onNavigateToDetails)
+        is UserDetailsUiState.Success -> ReposListScreen(localRepos = userDetailsUiState.localRepos, onNavigateToDetails)
         is UserDetailsUiState.Error -> ReposErrorScreen(message = userDetailsUiState.message)
     }
 }
@@ -51,11 +51,11 @@ fun ReposErrorScreen(message: String) {
 }
 
 @Composable
-fun ReposListScreen(repos: List<Repo>, onNavigateToDetails: (login: String) -> Unit) {
+fun ReposListScreen(localRepos: List<LocalRepo>, onNavigateToDetails: (login: String) -> Unit) {
     LazyColumn(modifier = Modifier.background(Color.White)) {
-        items(repos) { repo ->
+        items(localRepos) { repo ->
             Spacer(modifier = Modifier.size(10.dp))
-            RepoCard(repo = repo, onNavigateToDetails)
+            RepoCard(localRepo = repo, onNavigateToDetails)
             Spacer(modifier = Modifier.size(10.dp))
             Divider(color = MaterialTheme.colorScheme.onSurface.copy(0.05f),
                 modifier = Modifier
@@ -67,27 +67,27 @@ fun ReposListScreen(repos: List<Repo>, onNavigateToDetails: (login: String) -> U
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RepoCard(repo: Repo, onNavigateToDetails: (login: String) -> Unit) {
-    Card(onClick = { onNavigateToDetails(repo.htmlUrl) }) {
+fun RepoCard(localRepo: LocalRepo, onNavigateToDetails: (login: String) -> Unit) {
+    Card(onClick = { onNavigateToDetails(localRepo.htmlUrl) }) {
         Row(modifier = Modifier
             .fillMaxWidth()
             .background(Color.White)) {
             Spacer(modifier = Modifier.size(20.dp))
-            DisplayRepo(repo = repo)
+            DisplayRepo(localRepo = localRepo)
         }
     }
 }
 
 @Composable
-fun DisplayRepo(repo: Repo) {
+fun DisplayRepo(localRepo: LocalRepo) {
     Column() {
-        RepoName(name = repo.name)
-        RepoUpdateDate(date = repo.lastUpdate)
+        RepoName(name = localRepo.name)
+        RepoUpdateDate(date = localRepo.lastUpdate)
         Spacer(modifier = Modifier.size(5.dp))
         Row() {
-            RepoStar(count = repo.stars)
+            RepoStar(count = localRepo.stars)
             Spacer(modifier = Modifier.size(15.dp))
-            RepoLanguage(language = repo.language ?: "Unknown")
+            RepoLanguage(language = localRepo.language ?: "Unknown")
         }
     }
 }

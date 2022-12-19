@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.taskb.DataResult
+import com.example.taskb.UsersResult
 import com.example.taskb.TAG
 import com.example.taskb.repository.Repository
 import com.example.taskb.ui.state.MainUiState
@@ -28,15 +28,15 @@ class MainViewModel @Inject constructor(private val repository: Repository): Vie
         viewModelScope.launch {
             mainUiState = MainUiState.Loading
             repository.loadUsers()
-            when (val result = repository.dataResult.value!!) {
-                is DataResult.Loading -> {
+            when (val result = repository.users.value!!) {
+                is UsersResult.Loading -> {
                     mainUiState = MainUiState.Loading
                 }
-                is DataResult.Success -> {
+                is UsersResult.Success -> {
                     mainUiState = MainUiState.Success(result.users)
                     Log.d(TAG, "listUsers => Success, list size:${result.users.size}")
                 }
-                is DataResult.Error -> {
+                is UsersResult.Error -> {
                     mainUiState = MainUiState.Error(result.message)
                     Log.d(TAG, "listUsers => Error: ${result.message}")
                 }

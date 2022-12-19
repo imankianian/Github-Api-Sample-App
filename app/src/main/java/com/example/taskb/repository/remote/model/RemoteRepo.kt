@@ -2,7 +2,7 @@ package com.example.taskb.repository.remote.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Repo(
+data class RemoteRepo(
 
     @SerializedName("name")
     val name: String,

@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.taskb.ApiResult
+import com.example.taskb.ReposResult
 import com.example.taskb.TAG
 import com.example.taskb.repository.Repository
 import com.example.taskb.ui.state.UserDetailsUiState
@@ -29,18 +29,19 @@ class UserDetailsViewModel @Inject constructor(private val repository: Repositor
 
     private fun listUserRepos(login: String) {
         viewModelScope.launch {
-            when(val result = repository.getUserRepos(login)) {
-                is ApiResult.Success -> {
-                    userDetailsUiState = UserDetailsUiState.Success(result.data)
-                    Log.d(TAG, "listRepos => Success, list size:${result.data.size}")
+            userDetailsUiState = UserDetailsUiState.Loading
+            repository.loadUserRepos(login)
+            when(val result = repository.repos.value!!) {
+                is ReposResult.Loading -> {
+                    userDetailsUiState = UserDetailsUiState.Loading
                 }
-                is ApiResult.Error -> {
-                    userDetailsUiState = UserDetailsUiState.Error(result.message ?: result.code.toString())
-                    Log.d(TAG, "listRepos => Error: ${result.code}, ${result.message}")
+                is ReposResult.Success -> {
+                    userDetailsUiState = UserDetailsUiState.Success(result.users)
+                    Log.d(TAG, "listRepos => Success, list size:${result.users.size}")
                 }
-                is ApiResult.Exception -> {
-                    userDetailsUiState = UserDetailsUiState.Error(result.throwable.localizedMessage ?: "Exception")
-                    Log.d(TAG, "listRepos => Exception: ${result.throwable.message}")
+                is ReposResult.Error -> {
+                    userDetailsUiState = UserDetailsUiState.Error(result.message)
+                    Log.d(TAG, "listRepos => Error: ${result.message}")
                 }
             }
         }

@@ -1,14 +1,14 @@
 package com.example.taskb.repository
 
 import androidx.lifecycle.LiveData
-import com.example.taskb.ApiResult
-import com.example.taskb.DataResult
-import com.example.taskb.repository.remote.model.Repo
+import com.example.taskb.ReposResult
+import com.example.taskb.UsersResult
 
 interface Repository {
 
-    val dataResult: LiveData<DataResult>
+    val users: LiveData<UsersResult>
+    val repos: LiveData<ReposResult>
 
     suspend fun loadUsers()
-    suspend fun getUserRepos(login: String): ApiResult<List<Repo>>
+    suspend fun loadUserRepos(login: String)
 }
