@@ -27,7 +27,7 @@ import com.example.taskb.ui.viewmodel.MainViewModel
 fun MainScreen(mainViewModel: MainViewModel, onNavigateToDetails: (login: String) -> Unit) {
     when (val mainUiState = mainViewModel.mainUiState) {
         is MainUiState.Loading -> MainLoadingScreen()
-        is MainUiState.Success -> UsersListScreen(remoteUsers = mainUiState.remoteUsers, onNavigateToDetails)
+        is MainUiState.Success -> UsersListScreen(localUsers = mainUiState.localUsers, onNavigateToDetails)
         is MainUiState.Error -> MainErrorScreen(message = mainUiState.message)
     }
 }
@@ -54,11 +54,11 @@ fun MainErrorScreen(message: String) {
 }
 
 @Composable
-fun UsersListScreen(remoteUsers: List<LocalUser>, onNavigateToDetails: (login: String) -> Unit) {
+fun UsersListScreen(localUsers: List<LocalUser>, onNavigateToDetails: (login: String) -> Unit) {
     LazyColumn(modifier = Modifier
         .padding(10.dp)
         .background(Color.White)) {
-        items(remoteUsers) { user ->
+        items(localUsers) { user ->
             UserCard(user = user, onNavigateToDetails)
         }
     }
