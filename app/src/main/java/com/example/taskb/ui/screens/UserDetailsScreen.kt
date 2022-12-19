@@ -106,9 +106,9 @@ fun UserDetailsContent(login: String, localRepos: List<LocalRepo>,
 fun ReposListScreen(localRepos: List<LocalRepo>, onNavigateToDetails: (login: String) -> Unit) {
     LazyColumn(modifier = Modifier.background(Color.White)) {
         items(localRepos) { repo ->
-            Spacer(modifier = Modifier.size(10.dp))
+            Spacer(modifier = Modifier.size(15.dp))
             RepoCard(localRepo = repo, onNavigateToDetails)
-            Spacer(modifier = Modifier.size(10.dp))
+            Spacer(modifier = Modifier.size(15.dp))
             Divider(color = MaterialTheme.colorScheme.onSurface.copy(0.05f),
                 modifier = Modifier
                     .fillMaxWidth()
