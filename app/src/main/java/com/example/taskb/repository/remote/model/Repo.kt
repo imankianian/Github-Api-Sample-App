@@ -17,5 +17,4 @@ data class Repo(
     val language: String?,
 
     @SerializedName("html_url")
-    val htmlUrl: String
-    )
+    val htmlUrl: String)

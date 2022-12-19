@@ -2,7 +2,9 @@ package com.example.taskb.di
 
 import android.app.Application
 import android.util.Log
+import androidx.room.Room
 import com.example.taskb.R
+import com.example.taskb.repository.local.GitHubDatabase
 import com.example.taskb.repository.remote.api.GitHubApi
 import dagger.Module
 import dagger.Provides
@@ -25,5 +27,12 @@ class AppModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(GitHubApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGitHubDatabase(application: Application): GitHubDatabase {
+        return Room.databaseBuilder(application, GitHubDatabase::class.java, "github_database")
+            .build()
     }
 }

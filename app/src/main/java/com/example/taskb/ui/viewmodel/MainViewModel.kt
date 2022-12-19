@@ -6,14 +6,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.taskb.DataResult
+import com.example.taskb.TAG
 import com.example.taskb.repository.Repository
-import com.example.taskb.repository.remote.ApiResult
 import com.example.taskb.ui.state.MainUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-const val MAIN_VIEW_MODEL = "MAIN_VIEW_MODEL"
 
 @HiltViewModel
 class MainViewModel @Inject constructor(private val repository: Repository): ViewModel() {
@@ -28,18 +27,18 @@ class MainViewModel @Inject constructor(private val repository: Repository): Vie
     private fun listUsers() {
         viewModelScope.launch {
             mainUiState = MainUiState.Loading
-            when (val result = repository.getUsers()) {
-                is ApiResult.ApiSuccess -> {
-                    mainUiState = MainUiState.Success(result.data)
-                    Log.d(MAIN_VIEW_MODEL, "listUsers => Success, list size:${result.data.size}")
+            repository.loadUsers()
+            when (val result = repository.dataResult.value!!) {
+                is DataResult.Loading -> {
+                    mainUiState = MainUiState.Loading
                 }
-                is ApiResult.ApiError -> {
-                    mainUiState = MainUiState.Error(result.message ?: result.code.toString())
-                    Log.d(MAIN_VIEW_MODEL, "listUsers => Error: ${result.code}, ${result.message}")
+                is DataResult.Success -> {
+                    mainUiState = MainUiState.Success(result.users)
+                    Log.d(TAG, "listUsers => Success, list size:${result.users.size}")
                 }
-                is ApiResult.ApiException -> {
-                    mainUiState = MainUiState.Error(result.throwable.localizedMessage ?: "Exception")
-                    Log.d(MAIN_VIEW_MODEL, "listUsers => Exception: ${result.throwable.message}")
+                is DataResult.Error -> {
+                    mainUiState = MainUiState.Error(result.message)
+                    Log.d(TAG, "listUsers => Error: ${result.message}")
                 }
             }
         }

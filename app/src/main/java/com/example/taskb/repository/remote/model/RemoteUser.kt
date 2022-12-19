@@ -2,14 +2,10 @@ package com.example.taskb.repository.remote.model
 
 import com.google.gson.annotations.SerializedName
 
-data class User(
+data class RemoteUser(
 
     @SerializedName("login")
-    val loginName: String,
+    val login: String,
 
     @SerializedName("avatar_url")
-    val avatarUrl: String,
-
-    @SerializedName("repos_url")
-    val reposUrl: String
-    )
+    val avatarUrl: String)

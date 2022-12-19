@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.taskb.repository.remote.model.User
+import com.example.taskb.repository.local.model.LocalUser
 import com.example.taskb.ui.state.MainUiState
 import com.example.taskb.ui.viewmodel.MainViewModel
 
@@ -27,7 +27,7 @@ import com.example.taskb.ui.viewmodel.MainViewModel
 fun MainScreen(mainViewModel: MainViewModel, onNavigateToDetails: (login: String) -> Unit) {
     when (val mainUiState = mainViewModel.mainUiState) {
         is MainUiState.Loading -> MainLoadingScreen()
-        is MainUiState.Success -> UsersListScreen(users = mainUiState.users, onNavigateToDetails)
+        is MainUiState.Success -> UsersListScreen(remoteUsers = mainUiState.remoteUsers, onNavigateToDetails)
         is MainUiState.Error -> MainErrorScreen(message = mainUiState.message)
     }
 }
@@ -54,11 +54,11 @@ fun MainErrorScreen(message: String) {
 }
 
 @Composable
-fun UsersListScreen(users: List<User>, onNavigateToDetails: (login: String) -> Unit) {
+fun UsersListScreen(remoteUsers: List<LocalUser>, onNavigateToDetails: (login: String) -> Unit) {
     LazyColumn(modifier = Modifier
         .padding(10.dp)
         .background(Color.White)) {
-        items(users) { user ->
+        items(remoteUsers) { user ->
             UserCard(user = user, onNavigateToDetails)
         }
     }
@@ -66,8 +66,8 @@ fun UsersListScreen(users: List<User>, onNavigateToDetails: (login: String) -> U
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserCard(user: User, onNavigateToDetails: (login: String) -> Unit) {
-    Card(onClick = { onNavigateToDetails(user.loginName) },
+fun UserCard(user: LocalUser, onNavigateToDetails: (login: String) -> Unit) {
+    Card(onClick = { onNavigateToDetails(user.login) },
         modifier = Modifier.padding(bottom = 20.dp)) {
         Row(modifier = Modifier
             .height(40.dp)
@@ -81,20 +81,20 @@ fun UserCard(user: User, onNavigateToDetails: (login: String) -> Unit) {
 }
 
 @Composable
-fun UserAvatar(user: User) {
+fun UserAvatar(user: LocalUser) {
         AsyncImage(model = ImageRequest.Builder(LocalContext.current)
             .data(user.avatarUrl)
             .crossfade(true)
             .build(),
-            contentDescription = user.loginName,
+            contentDescription = user.login,
             contentScale = ContentScale.Fit,
             modifier = Modifier.width(40.dp).height(40.dp).clip(CircleShape)
         )
 }
 
 @Composable
-fun UserLoginName(user: User) {
-    Text(text = user.loginName,
+fun UserLoginName(user: LocalUser) {
+    Text(text = user.login,
         color = Color.Black,
         fontSize = 18.sp,
         modifier = Modifier
