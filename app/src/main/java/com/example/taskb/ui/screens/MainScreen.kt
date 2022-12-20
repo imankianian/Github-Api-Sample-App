@@ -61,7 +61,7 @@ fun MainScreenContent(localUsers: List<LocalUser>, onNavigateToDetails: (login: 
             )
         }, content = {
             Column(modifier = Modifier.padding(it)) {
-                Divider(color = Color.White,
+                Divider(color = MaterialTheme.colorScheme.onSurface.copy(0.1f),
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(1.dp))
