@@ -61,7 +61,7 @@ fun MainScreenContent(localUsers: List<LocalUser>, onNavigateToDetails: (login: 
             )
         }, content = {
             Column(modifier = Modifier.padding(it)) {
-                Divider(color = MaterialTheme.colorScheme.onSurface.copy(0.05f),
+                Divider(color = Color.White,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(1.dp))
@@ -123,8 +123,7 @@ fun UserLoginName(user: LocalUser) {
         fontSize = 18.sp,
         fontWeight = FontWeight.Normal,
         modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
+            .fillMaxSize()
             .wrapContentHeight(CenterVertically)
             .padding(start = 10.dp)
     )

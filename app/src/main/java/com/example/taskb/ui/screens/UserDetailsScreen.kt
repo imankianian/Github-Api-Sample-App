@@ -73,7 +73,7 @@ fun UserDetailsContent(login: String, localRepos: List<LocalRepo>,
             )
         }, content = {
             Column(modifier = Modifier.padding(it)) {
-                Divider(color = MaterialTheme.colorScheme.onSurface.copy(0.05f),
+                Divider(color = Color.White,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(1.dp))
@@ -90,7 +90,7 @@ fun ReposListScreen(localRepos: List<LocalRepo>, onNavigateToDetails: (login: St
             Spacer(modifier = Modifier.size(15.dp))
             RepoCard(localRepo = repo, onNavigateToDetails)
             Spacer(modifier = Modifier.size(15.dp))
-            Divider(color = MaterialTheme.colorScheme.onSurface.copy(0.05f),
+            Divider(color = Color.White,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(1.dp))
