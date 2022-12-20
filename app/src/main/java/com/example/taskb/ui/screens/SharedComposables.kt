@@ -3,6 +3,7 @@ package com.example.taskb.ui.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,8 +29,7 @@ fun LoadingScreen(composable: @Composable () -> Unit) {
 @Composable
 fun ErrorScreen(message: String) {
     Column(modifier = Modifier
-        .width(300.dp)
-        .fillMaxHeight()
+        .fillMaxSize()
         .wrapContentHeight(CenterVertically),
             horizontalAlignment = Alignment.CenterHorizontally) {
         Image(painter = painterResource(id = R.drawable.ic_offline),
@@ -39,11 +39,12 @@ fun ErrorScreen(message: String) {
                 .height(100.dp)
                 .wrapContentHeight(CenterVertically),
                 alpha = 0.3f)
-        Divider(color = Color.White,
+        Divider(color = MaterialTheme.colorScheme.onSurface.copy(0f),
             modifier = Modifier.height(20.dp))
         Text(text = message,
             textAlign = TextAlign.Center,
             color = Color.Gray,
-            fontSize = 10.sp)
+            fontSize = 10.sp,
+            modifier = Modifier.padding(10.dp))
     }
 }
