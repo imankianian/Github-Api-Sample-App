@@ -14,4 +14,7 @@ data class LocalUser(
     val login: String,
 
     @ColumnInfo(name = "avatar_url")
-    val avatarUrl: String)
+    val avatarUrl: String,
+
+    @ColumnInfo(name = "repos_saved")
+    val reposSaved: Boolean)

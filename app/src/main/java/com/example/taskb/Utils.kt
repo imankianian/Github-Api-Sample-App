@@ -29,7 +29,8 @@ sealed interface ReposResult {
 fun List<RemoteUser>.remoteUserToLocalUser(): List<LocalUser> {
     val localUsers = mutableListOf<LocalUser>()
     this.forEach { remoteUser ->
-        localUsers.add(LocalUser(login = remoteUser.login, avatarUrl = remoteUser.avatarUrl))
+        localUsers.add(LocalUser(login = remoteUser.login, avatarUrl = remoteUser.avatarUrl,
+                            reposSaved = false))
     }
     return localUsers
 }
