@@ -4,10 +4,10 @@ import com.example.taskb.repository.remote.api.GitHubApi
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class RemoteDataSourceImpl(private val gitHubApi: GitHubApi,
-                           private val dispatcher: CoroutineDispatcher = Dispatchers.IO)
-    :RemoteDataSource {
+class RemoteDataSourceImpl @Inject constructor(private val gitHubApi: GitHubApi,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO):RemoteDataSource {
 
     override suspend fun getUsers(): NetworkResult = withContext(dispatcher) {
         try {
