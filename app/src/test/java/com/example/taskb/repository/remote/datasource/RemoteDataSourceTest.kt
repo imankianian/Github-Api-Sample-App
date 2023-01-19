@@ -6,6 +6,7 @@ import com.github.javafaker.Faker
 import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
@@ -24,26 +25,21 @@ class RemoteDataSourceTest {
     fun getUsersRetrievesUsersIfResponseWasSuccessful() = runTest {
         whenever(gitHubApi.fetchUsers()).thenReturn(Response.success(listOf(user)))
         val response = remoteDataSource.getUsers()
-        if (response is NetworkResult.Success) {
-            assertEquals(user, response.users[0])
-        }
+        assertEquals(user, (response as NetworkResult.Success).users[0])
     }
 
     @Test
     fun getUsersRetrievesErrorIfResponseWasNotSuccessful() = runTest {
-        whenever(gitHubApi.fetchUsers()).thenReturn(Response.error(404, "".toResponseBody(null)))
+        val errorCode = 404
+        whenever(gitHubApi.fetchUsers()).thenReturn(Response.error(errorCode, "".toResponseBody(null)))
         val response = remoteDataSource.getUsers()
-        if (response is NetworkResult.Error) {
-            assert(response.code == 404)
-        }
+        assertTrue((response as NetworkResult.Error).code == errorCode)
     }
 
     @Test
     fun getUsersRetrievesFailureIfNetworkRequestFailed() = runTest {
         whenever(gitHubApi.fetchUsers()).thenThrow(IllegalStateException(failureMessage))
         val response = remoteDataSource.getUsers()
-        if (response is NetworkResult.Failure) {
-            assertEquals(failureMessage, response.message)
-        }
+        assertEquals(failureMessage, (response as NetworkResult.Failure).message)
     }
 }
