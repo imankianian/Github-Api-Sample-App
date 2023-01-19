@@ -31,11 +31,7 @@ class GitHubApiTest {
     fun fetchUsersEmitsUsers() = runTest {
         mockWebServer.enqueue(MockResponse().setBody(testJson).setResponseCode(200))
         val response = gitHubApi.fetchUsers()
-        if (response.isSuccessful) {
-            response?.body()?.let { users ->
-                assertEquals(User(login, avatarUrl), users[0])
-            }
-        }
+        assertEquals(User(login, avatarUrl), response.body()!![0])
     }
 
     @Test
