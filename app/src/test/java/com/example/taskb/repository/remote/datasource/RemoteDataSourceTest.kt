@@ -15,14 +15,12 @@ import retrofit2.Response
 class RemoteDataSourceTest {
 
     private val gitHubApi: GitHubApi = mock()
-    private val faker = Faker()
-    private val user = User(faker.name().username(), faker.internet().avatar())
     private val remoteDataSource: RemoteDataSource = RemoteDataSourceImpl(gitHubApi)
-    private val failureMessage = "Failed to connect to server"
-
 
     @Test
     fun getUsersRetrievesUsersIfResponseWasSuccessful() = runTest {
+        val faker = Faker()
+        val user = User(faker.name().username(), faker.internet().avatar())
         whenever(gitHubApi.fetchUsers()).thenReturn(Response.success(listOf(user)))
         val response = remoteDataSource.getUsers()
         assertEquals(user, (response as NetworkResult.Success).users[0])
@@ -38,6 +36,7 @@ class RemoteDataSourceTest {
 
     @Test
     fun getUsersRetrievesFailureIfNetworkRequestFailed() = runTest {
+        val failureMessage = "Failed to connect to server"
         whenever(gitHubApi.fetchUsers()).thenThrow(IllegalStateException(failureMessage))
         val response = remoteDataSource.getUsers()
         assertEquals(failureMessage, (response as NetworkResult.Failure).message)
