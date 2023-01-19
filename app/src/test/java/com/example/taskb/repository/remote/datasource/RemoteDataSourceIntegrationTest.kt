@@ -15,7 +15,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 class RemoteDataSourceIntegrationTest {
 
     private val mockWebServer = MockWebServer()
-
     private val gitHubApi by lazy {
         Retrofit.Builder()
             .baseUrl(mockWebServer.url("/"))
@@ -23,28 +22,25 @@ class RemoteDataSourceIntegrationTest {
             .build()
             .create(GitHubApi::class.java)
     }
-
     private val remoteDataSource: RemoteDataSource = RemoteDataSourceImpl(gitHubApi)
-    private val faker = Faker()
-    private val login = faker.name().username()
-    private val avatarUrl = faker.internet().avatar()
-    private val testJson = """[ { "login": "$login", "avatar_url": "$avatarUrl" } ]"""
+
 
     @Test
     fun getUsersRetrievesUsersIfResponseWasSuccessful() = runTest {
+        val faker = Faker()
+        val login = faker.name().username()
+        val avatarUrl = faker.internet().avatar()
+        val testJson = """[ { "login": "$login", "avatar_url": "$avatarUrl" } ]"""
         mockWebServer.enqueue(MockResponse().setBody(testJson).setResponseCode(200))
         val result = remoteDataSource.getUsers()
-        if ( result is NetworkResult.Success) {
-            assertEquals(User(login, avatarUrl), result.users[0])
-        }
+        assertEquals(User(login, avatarUrl), (result as NetworkResult.Success).users[0])
     }
 
     @Test
     fun getUsersRetrievesErrorIfResponseWasNotSuccessful() = runTest {
-        mockWebServer.enqueue(MockResponse().setBody("").setResponseCode(404))
+        val errorCode = 404
+        mockWebServer.enqueue(MockResponse().setBody("").setResponseCode(errorCode))
         val result = remoteDataSource.getUsers()
-        if (result is NetworkResult.Error) {
-            assertTrue(result.code == 404)
-        }
+        assertTrue((result as NetworkResult.Error).code == errorCode)
     }
 }
