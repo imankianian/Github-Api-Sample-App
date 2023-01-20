@@ -8,12 +8,20 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 class RepositoryTest {
 
     private val remoteDataSource: RemoteDataSource = mock()
     private val repository: Repository = RepositoryImpl(remoteDataSource)
+
+    @Test
+    fun whenGetUsersCallsRepositoryGetUsers() = runTest {
+        whenever(remoteDataSource.getUsers()).thenReturn(NetworkResult.Success(listOf()))
+        repository.getUsers()
+        verify(remoteDataSource).getUsers()
+    }
 
     @Test
     fun getUsersReturnsListOfUsersIfRetrievedSuccessfully() = runTest {

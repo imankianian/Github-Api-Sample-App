@@ -24,7 +24,6 @@ class RemoteDataSourceIntegrationTest {
     }
     private val remoteDataSource: RemoteDataSource = RemoteDataSourceImpl(gitHubApi)
 
-
     @Test
     fun getUsersRetrievesUsersIfResponseWasSuccessful() = runTest {
         val faker = Faker()

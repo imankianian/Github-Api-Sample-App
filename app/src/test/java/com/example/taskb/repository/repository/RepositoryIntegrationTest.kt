@@ -12,7 +12,6 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.kotlin.mock
-import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import retrofit2.Response
 
@@ -21,12 +20,6 @@ class RepositoryIntegrationTest {
     private val gitHubApi: GitHubApi = mock()
     private val remoteDataSource: RemoteDataSource = Mockito.spy(RemoteDataSourceImpl(gitHubApi))
     private val repository: Repository = RepositoryImpl(remoteDataSource)
-
-    @Test
-    fun getUsersCallsRemoteDataSourceGetUsers() = runTest {
-        repository.getUsers()
-        verify(remoteDataSource).getUsers()
-    }
 
     @Test
     fun getUsersReturnsListOfUsersIfRetrievedSuccessfully() = runTest {
