@@ -9,6 +9,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import retrofit2.Response
 
@@ -16,6 +17,12 @@ class RemoteDataSourceTest {
 
     private val gitHubApi: GitHubApi = mock()
     private val remoteDataSource: RemoteDataSource = RemoteDataSourceImpl(gitHubApi)
+
+    @Test
+    fun whenGetUsersCallsFetchUsers() = runTest {
+        remoteDataSource.getUsers()
+        verify(gitHubApi).fetchUsers()
+    }
 
     @Test
     fun getUsersRetrievesUsersIfResponseWasSuccessful() = runTest {
@@ -29,7 +36,8 @@ class RemoteDataSourceTest {
     @Test
     fun getUsersRetrievesErrorIfResponseWasNotSuccessful() = runTest {
         val errorCode = 404
-        whenever(gitHubApi.fetchUsers()).thenReturn(Response.error(errorCode, "".toResponseBody(null)))
+        whenever(gitHubApi.fetchUsers()).thenReturn(Response.error(errorCode,
+            "".toResponseBody(null)))
         val response = remoteDataSource.getUsers()
         assertTrue((response as NetworkResult.Error).code == errorCode)
     }
