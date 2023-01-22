@@ -3,6 +3,7 @@ package com.example.taskb.repository.remote.datasource
 import com.example.taskb.repository.remote.api.GitHubApi
 import com.example.taskb.repository.remote.model.User
 import com.github.javafaker.Faker
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -22,10 +23,11 @@ class RemoteDataSourceIntegrationTest {
             .build()
             .create(GitHubApi::class.java)
     }
-    private val remoteDataSource: RemoteDataSource = RemoteDataSourceImpl(gitHubApi)
+    private val dispatcher = UnconfinedTestDispatcher()
+    private val remoteDataSource: RemoteDataSource = RemoteDataSourceImpl(gitHubApi, dispatcher)
 
     @Test
-    fun getUsersRetrievesUsersIfResponseWasSuccessful() = runTest {
+    fun getUsersRetrievesUsersIfResponseWasSuccessful() = runTest(dispatcher) {
         val faker = Faker()
         val login = faker.name().username()
         val avatarUrl = faker.internet().avatar()
@@ -36,7 +38,7 @@ class RemoteDataSourceIntegrationTest {
     }
 
     @Test
-    fun getUsersRetrievesErrorIfResponseWasNotSuccessful() = runTest {
+    fun getUsersRetrievesErrorIfResponseWasNotSuccessful() = runTest(dispatcher) {
         val errorCode = 404
         mockWebServer.enqueue(MockResponse().setBody("").setResponseCode(errorCode))
         val result = remoteDataSource.getUsers()

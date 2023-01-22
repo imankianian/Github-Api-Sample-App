@@ -1,13 +1,15 @@
 package com.example.taskb.repository.remote.datasource
 
+import com.example.taskb.di.IoDispatcher
 import com.example.taskb.repository.remote.api.GitHubApi
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RemoteDataSourceImpl @Inject constructor(private val gitHubApi: GitHubApi,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO):RemoteDataSource {
+    @IoDispatcher private val dispatcher: CoroutineDispatcher):RemoteDataSource {
 
     override suspend fun getUsers(): NetworkResult = withContext(dispatcher) {
         try {

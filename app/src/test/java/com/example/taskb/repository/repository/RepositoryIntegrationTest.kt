@@ -5,6 +5,7 @@ import com.example.taskb.repository.remote.datasource.RemoteDataSource
 import com.example.taskb.repository.remote.datasource.RemoteDataSourceImpl
 import com.example.taskb.repository.remote.model.User
 import com.github.javafaker.Faker
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.Assert.assertEquals
@@ -18,11 +19,12 @@ import retrofit2.Response
 class RepositoryIntegrationTest {
 
     private val gitHubApi: GitHubApi = mock()
-    private val remoteDataSource: RemoteDataSource = Mockito.spy(RemoteDataSourceImpl(gitHubApi))
-    private val repository: Repository = RepositoryImpl(remoteDataSource)
+    private val dispatcher = UnconfinedTestDispatcher()
+    private val remoteDataSource: RemoteDataSource = Mockito.spy(RemoteDataSourceImpl(gitHubApi, dispatcher))
+    private val repository: Repository = RepositoryImpl(remoteDataSource, dispatcher)
 
     @Test
-    fun getUsersReturnsListOfUsersIfRetrievedSuccessfully() = runTest {
+    fun getUsersReturnsListOfUsersIfRetrievedSuccessfully() = runTest(dispatcher) {
         val faker = Faker()
         val login = faker.name().username()
         val avatarUrl = faker.internet().avatar()
@@ -33,7 +35,7 @@ class RepositoryIntegrationTest {
     }
 
     @Test
-    fun getUsersReturnsErrorIfRetrievedError() = runTest {
+    fun getUsersReturnsErrorIfRetrievedError() = runTest(dispatcher) {
         val errorCode = 404
         whenever(gitHubApi.fetchUsers()).thenReturn(Response.error(errorCode, "".toResponseBody()))
         val result = repository.getUsers()
@@ -41,7 +43,7 @@ class RepositoryIntegrationTest {
     }
 
     @Test
-    fun getUsersReturnsErrorIfRetrievedFailure() = runTest {
+    fun getUsersReturnsErrorIfRetrievedFailure() = runTest(dispatcher) {
         val failureMessage = "Failed to connect to server"
         whenever(gitHubApi.fetchUsers()).thenThrow(IllegalStateException(failureMessage))
         val result = repository.getUsers()

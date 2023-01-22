@@ -1,14 +1,16 @@
 package com.example.taskb.repository.repository
 
+import com.example.taskb.di.IoDispatcher
 import com.example.taskb.repository.remote.datasource.NetworkResult
 import com.example.taskb.repository.remote.datasource.RemoteDataSource
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class RepositoryImpl @Inject constructor(private val remoteDataSource: RemoteDataSource,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO): Repository {
+    @IoDispatcher private val dispatcher: CoroutineDispatcher): Repository {
 
     override suspend fun getUsers(): UserResult = withContext(dispatcher) {
         when (val result = remoteDataSource.getUsers()) {
