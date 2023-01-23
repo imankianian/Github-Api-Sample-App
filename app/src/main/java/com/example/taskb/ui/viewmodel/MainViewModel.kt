@@ -29,8 +29,7 @@ class MainViewModel @Inject constructor(private val repository: Repository): Vie
 
     private fun listUsers() {
         viewModelScope.launch {
-            repository.loadUsers()
-            when (val result = repository.users.value!!) {
+            when (val result = repository.loadUsers()) {
                 is UsersResult.Loading -> {
                     mainUiState = MainUiState.Loading
                 }

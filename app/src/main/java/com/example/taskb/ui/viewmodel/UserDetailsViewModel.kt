@@ -34,8 +34,7 @@ class UserDetailsViewModel @Inject constructor(private val repository: Repositor
     private fun listUserRepos(login: String) {
         viewModelScope.launch {
             userDetailsUiState = UserDetailsUiState.Loading
-            repository.loadUserRepos(login)
-            when(val result = repository.repos.value!!) {
+            when(val result = repository.loadUserRepos(login)) {
                 is ReposResult.Loading -> {
                     userDetailsUiState = UserDetailsUiState.Loading
                 }
