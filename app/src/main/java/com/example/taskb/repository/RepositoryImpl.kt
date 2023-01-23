@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import com.example.taskb.*
 import com.example.taskb.repository.local.LocalDataSource
 import com.example.taskb.repository.remote.RemoteDataSource
+import com.example.taskb.repository.remote.model.RemoteRepo
+import com.example.taskb.repository.remote.model.RemoteUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -32,11 +34,13 @@ class RepositoryImpl @Inject constructor(
             } else {
                 Log.d(TAG, "Loading users from network")
                 when(val result = remoteDataSource.getUsers()) {
-                    is ApiResult.Success -> {
-                        Log.d(TAG, "Loading network users => Success: ${result.data.size}")
-                        val newUsers = result.data.remoteUserToLocalUser()
-                        localDataSource.saveUsers(newUsers)
-                        _users.postValue(UsersResult.Success(newUsers))
+                    is ApiResult.Success<*> -> {
+                        (result.data as? List<RemoteUser>)?.let { remoteUsers ->
+                            Log.d(TAG, "Loading network users => Success: ${remoteUsers.size}")
+                            val localUsers = remoteUsers.remoteUserToLocalUser()
+                            localDataSource.saveUsers(localUsers)
+                            _users.postValue(UsersResult.Success(localUsers))
+                        }
                     }
                     is ApiResult.Error -> {
                         Log.d(TAG, "Loading network users => Error: ${result.message}")
@@ -62,11 +66,13 @@ class RepositoryImpl @Inject constructor(
             } else {
                 Log.d(TAG, "Loading repo from network")
                 when(val result = remoteDataSource.getUserRepos(login)) {
-                    is ApiResult.Success -> {
-                        Log.d(TAG, "Loading network repo => Success: ${result.data.size}")
-                        val newRepos = result.data.remoteRepoToLocalRepo(login)
-                        localDataSource.saveUserRepos(login, newRepos)
-                        _repos.postValue(ReposResult.Success(newRepos))
+                    is ApiResult.Success<*> -> {
+                        (result.data as? List<RemoteRepo>)?.let { remoteRepos ->
+                            Log.d(TAG, "Loading network repo => Success: ${remoteRepos.size}")
+                            val localRepos = remoteRepos.remoteRepoToLocalRepo(login)
+                            localDataSource.saveUserRepos(login, localRepos)
+                            _repos.postValue(ReposResult.Success(localRepos))
+                        }
                     }
                     is ApiResult.Error -> {
                         Log.d(TAG, "Loading network repo => Error: ${result.message}")
