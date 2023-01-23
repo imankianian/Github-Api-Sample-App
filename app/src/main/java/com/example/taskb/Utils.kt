@@ -16,13 +16,11 @@ sealed interface ApiResult {
 
 sealed interface UsersResult {
     data class Success(val users: List<LocalUser>): UsersResult
-    object Loading: UsersResult
     data class Error(val message: String): UsersResult
 }
 
 sealed interface ReposResult {
     data class Success(val users: List<LocalRepo>): ReposResult
-    object Loading: ReposResult
     data class Error(val message: String): ReposResult
 }
 

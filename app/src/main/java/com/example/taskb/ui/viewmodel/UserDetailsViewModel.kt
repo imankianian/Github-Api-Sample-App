@@ -35,9 +35,6 @@ class UserDetailsViewModel @Inject constructor(private val repository: Repositor
         viewModelScope.launch {
             userDetailsUiState = UserDetailsUiState.Loading
             when(val result = repository.loadUserRepos(login)) {
-                is ReposResult.Loading -> {
-                    userDetailsUiState = UserDetailsUiState.Loading
-                }
                 is ReposResult.Success -> {
                     connectionLost = false
                     userDetailsUiState = UserDetailsUiState.Success(result.users.convert())

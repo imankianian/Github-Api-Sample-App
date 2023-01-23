@@ -30,9 +30,6 @@ class MainViewModel @Inject constructor(private val repository: Repository): Vie
     private fun listUsers() {
         viewModelScope.launch {
             when (val result = repository.loadUsers()) {
-                is UsersResult.Loading -> {
-                    mainUiState = MainUiState.Loading
-                }
                 is UsersResult.Success -> {
                     connectionLost = false
                     mainUiState = MainUiState.Success(result.users)
