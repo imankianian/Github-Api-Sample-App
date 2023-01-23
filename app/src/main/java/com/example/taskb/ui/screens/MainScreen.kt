@@ -20,6 +20,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.taskb.R
@@ -27,9 +29,10 @@ import com.example.taskb.repository.local.model.LocalUser
 import com.example.taskb.ui.state.MainUiState
 import com.example.taskb.ui.viewmodel.MainViewModel
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun MainScreen(mainViewModel: MainViewModel, onNavigateToDetails: (login: String) -> Unit) {
-    when (val mainUiState = mainViewModel.mainUiState) {
+    when (val mainUiState = mainViewModel.mainUiState.collectAsStateWithLifecycle().value) {
         is MainUiState.Loading -> LoadingScreen {
             Image(painter = painterResource(id = R.drawable.ic_github_mark), contentDescription = "Github logo",
                 modifier = Modifier

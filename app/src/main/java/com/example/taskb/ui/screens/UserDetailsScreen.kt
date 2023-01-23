@@ -18,16 +18,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.taskb.R
 import com.example.taskb.repository.local.model.LocalRepo
 import com.example.taskb.ui.state.UserDetailsUiState
 import com.example.taskb.ui.viewmodel.UserDetailsViewModel
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun UserDetailsScreen(userDetailsViewModel: UserDetailsViewModel,
                       onNavigateToDetails: (login: String) -> Unit,
                         onBackPressed: () -> Unit) {
-    when (val userDetailsUiState = userDetailsViewModel.userDetailsUiState) {
+    when (val userDetailsUiState = userDetailsViewModel.usersDetailsUiState.collectAsStateWithLifecycle().value) {
         is UserDetailsUiState.Loading -> LoadingScreen {
             CircularProgressIndicator(
                 modifier = Modifier
