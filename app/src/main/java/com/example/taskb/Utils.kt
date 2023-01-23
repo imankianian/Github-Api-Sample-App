@@ -8,21 +8,19 @@ import java.text.SimpleDateFormat
 
 const val TAG = "TASK_B"
 
-sealed interface ApiResult<T: Any> {
-    class Success<T: Any>(val data: T): ApiResult<T>
-    class Error<T: Any>(val code: Int, val message: String?): ApiResult<T>
-    class Exception<T: Any>(val throwable: Throwable): ApiResult<T>
+sealed interface ApiResult {
+    data class Success<T: Any>(val data: T): ApiResult
+    data class Error(val code: Int, val message: String?): ApiResult
+    data class Exception(val throwable: Throwable): ApiResult
 }
 
 sealed interface UsersResult {
     data class Success(val users: List<LocalUser>): UsersResult
-    object Loading: UsersResult
     data class Error(val message: String): UsersResult
 }
 
 sealed interface ReposResult {
     data class Success(val users: List<LocalRepo>): ReposResult
-    object Loading: ReposResult
     data class Error(val message: String): ReposResult
 }
 

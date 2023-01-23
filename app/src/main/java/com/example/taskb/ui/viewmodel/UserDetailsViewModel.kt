@@ -1,9 +1,6 @@
 package com.example.taskb.ui.viewmodel
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,6 +11,8 @@ import com.example.taskb.repository.Repository
 import com.example.taskb.ui.state.UserDetailsUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,9 +21,8 @@ class UserDetailsViewModel @Inject constructor(private val repository: Repositor
                                            savedStateHandle: SavedStateHandle): ViewModel() {
 
     val login = savedStateHandle.get<String>("login")
-    var userDetailsUiState: UserDetailsUiState by mutableStateOf(UserDetailsUiState.Loading)
-        private set
-
+    private var _userDetailsUiState = MutableStateFlow<UserDetailsUiState>(UserDetailsUiState.Loading)
+    val usersDetailsUiState: StateFlow<UserDetailsUiState> = _userDetailsUiState
     private var connectionLost = false
 
     init {
@@ -33,19 +31,15 @@ class UserDetailsViewModel @Inject constructor(private val repository: Repositor
 
     private fun listUserRepos(login: String) {
         viewModelScope.launch {
-            userDetailsUiState = UserDetailsUiState.Loading
-            repository.loadUserRepos(login)
-            when(val result = repository.repos.value!!) {
-                is ReposResult.Loading -> {
-                    userDetailsUiState = UserDetailsUiState.Loading
-                }
+            _userDetailsUiState.value = UserDetailsUiState.Loading
+            when(val result = repository.loadUserRepos(login)) {
                 is ReposResult.Success -> {
                     connectionLost = false
-                    userDetailsUiState = UserDetailsUiState.Success(result.users.convert())
+                    _userDetailsUiState.value = UserDetailsUiState.Success(result.users.convert())
                     Log.d(TAG, "listRepos => Success, list size:${result.users.size}")
                 }
                 is ReposResult.Error -> {
-                    userDetailsUiState = UserDetailsUiState.Error(result.message)
+                    _userDetailsUiState.value = UserDetailsUiState.Error(result.message)
                     Log.d(TAG, "listRepos => Error: ${result.message}")
                     connectionLost = true
                     delay(5000)
