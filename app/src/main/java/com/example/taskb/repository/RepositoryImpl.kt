@@ -2,19 +2,21 @@ package com.example.taskb.repository
 
 import android.util.Log
 import com.example.taskb.*
+import com.example.taskb.di.IoDispatcher
 import com.example.taskb.repository.local.LocalDataSource
 import com.example.taskb.repository.remote.RemoteDataSource
 import com.example.taskb.repository.remote.model.RemoteRepo
 import com.example.taskb.repository.remote.model.RemoteUser
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class RepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
-    private val localDataSource: LocalDataSource): Repository {
+    private val localDataSource: LocalDataSource,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher): Repository {
 
-    override suspend fun loadUsers(): UsersResult = withContext(Dispatchers.IO) {
+    override suspend fun loadUsers(): UsersResult = withContext(dispatcher) {
         Log.d(TAG, "loadUsers() called")
         val dbUsers = localDataSource.getUsers()
         if (dbUsers.isNotEmpty()) {
@@ -25,7 +27,7 @@ class RepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun loadUserRepos(login: String): ReposResult = withContext(Dispatchers.IO) {
+    override suspend fun loadUserRepos(login: String): ReposResult = withContext(dispatcher) {
         Log.d(TAG, "loadUserRepos() called")
         val user = localDataSource.getUser(login)
         if (user.reposSaved) {
