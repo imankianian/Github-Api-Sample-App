@@ -4,8 +4,10 @@ This is a sample Android app that:
 2. Upon clicking on a user, displays the user's repositories and some details from https://api.github.com/users/{login}/repos
 3. Saves all data on the device. So on next visits, the data is loaded in this order: loader &rarr; data from database &rarr; data from API
 
+**Note**: Checkout tdd branch for a test-driven development approach.
+
 This sample is implemented using the following stack:
-* Kotlin + Coroutines
+* Kotlin + Coroutines + StateFlow
 * Jetpack Compose
 * Repository pattern + MVVM + Single Activity
 * Retrofit
