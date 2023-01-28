@@ -16,6 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
@@ -90,13 +91,11 @@ fun UserDetailsContent(login: String, localRepos: List<LocalRepo>,
 fun ReposListScreen(localRepos: List<LocalRepo>, onNavigateToDetails: (login: String) -> Unit) {
     LazyColumn(modifier = Modifier.background(Color.White)) {
         items(localRepos) { repo ->
-            Spacer(modifier = Modifier.size(15.dp))
+            Spacer(modifier = sizeModifier15)
             RepoCard(localRepo = repo, onNavigateToDetails)
-            Spacer(modifier = Modifier.size(15.dp))
+            Spacer(modifier = sizeModifier15)
             Divider(color = MaterialTheme.colorScheme.onSurface.copy(0.1f),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp))
+                modifier = dividerModifier)
         }
     }
 }
@@ -105,10 +104,8 @@ fun ReposListScreen(localRepos: List<LocalRepo>, onNavigateToDetails: (login: St
 @Composable
 fun RepoCard(localRepo: LocalRepo , onNavigateToDetails: (login: String) -> Unit ) {
     Card(onClick = { onNavigateToDetails(localRepo.htmlUrl) }) {
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .background(Color.White)) {
-            Spacer(modifier = Modifier.size(20.dp))
+        Row(modifier = cardRowModifier) {
+            Spacer(modifier = sizeModifier20)
             DisplayRepo(localRepo = localRepo)
         }
     }
@@ -119,10 +116,10 @@ fun DisplayRepo(localRepo: LocalRepo) {
     Column() {
         RepoName(name = localRepo.name)
         RepoUpdateDate(date = localRepo.lastUpdate)
-        Spacer(modifier = Modifier.size(5.dp))
+        Spacer(modifier = sizeModifier5)
         Row(verticalAlignment = Alignment.CenterVertically) {
             RepoStar(count = localRepo.stars)
-            Spacer(modifier = Modifier.size(15.dp))
+            Spacer(modifier = sizeModifier15)
             RepoLanguage(language = localRepo.language ?: "Unknown")
         }
     }
@@ -151,8 +148,8 @@ fun RepoStar(count: Int) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Image(painter = painterResource(id = R.drawable.ic_star),
             contentDescription = "stars",
-        modifier = Modifier.height(20.dp))
-        Spacer(modifier = Modifier.size(5.dp))
+        modifier = heightModifier)
+        Spacer(modifier = sizeModifier5)
         Text(text = count.toString(),
             color = Color.Gray,
             fontSize = 15.sp,
@@ -166,13 +163,20 @@ fun RepoLanguage(language: String) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Image(painterResource(id = R.drawable.ic_language),
             contentDescription = "programming language",
-        modifier = Modifier.height(20.dp))
+        modifier = heightModifier)
 
     }
-    Spacer(modifier = Modifier.size(5.dp))
+    Spacer(modifier = sizeModifier5)
     Text(text = language,
         color = Color.Gray,
         fontSize = 15.sp,
         textAlign = TextAlign.Start
     )
 }
+
+private val sizeModifier5 = Modifier.size(5.dp)
+private val sizeModifier15 = Modifier.size(15.dp)
+private val sizeModifier20 = Modifier.size(20.dp)
+private val heightModifier = Modifier.height(20.dp)
+private val dividerModifier = Modifier.fillMaxWidth().height(1.dp)
+private val cardRowModifier = Modifier.fillMaxWidth().background(Color.White)

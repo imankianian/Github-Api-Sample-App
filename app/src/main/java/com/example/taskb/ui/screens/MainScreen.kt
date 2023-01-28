@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -76,13 +75,9 @@ fun MainScreenContent(localUsers: List<LocalUser>, onNavigateToDetails: (login: 
 
 @Composable
 fun UsersListScreen(localUsers: List<LocalUser>, onNavigateToDetails: (login: String) -> Unit) {
-    Column() {
-        LazyColumn(modifier = Modifier
-            .padding(10.dp)
-            .background(Color.White)) {
-            items(localUsers) { user ->
-                UserCard(user = user, onNavigateToDetails)
-            }
+    LazyColumn(modifier = columnModifier) {
+        items(localUsers) { user ->
+            UserCard(user = user, onNavigateToDetails)
         }
     }
 }
@@ -91,12 +86,9 @@ fun UsersListScreen(localUsers: List<LocalUser>, onNavigateToDetails: (login: St
 @Composable
 fun UserCard(user: LocalUser, onNavigateToDetails: (login: String) -> Unit) {
     Card(onClick = { onNavigateToDetails(user.login) },
-        modifier = Modifier.padding(bottom = 20.dp)) {
-        Row(modifier = Modifier
-            .height(40.dp)
-            .fillMaxWidth()
-            .background(Color.White),
-            verticalAlignment = Alignment.CenterVertically,
+        modifier = cardModifier) {
+        Row(modifier = userCardModifier,
+            verticalAlignment = CenterVertically,
         horizontalArrangement = Arrangement.Start) {
             UserAvatar(user = user)
             UserLoginName(user = user)
@@ -112,10 +104,7 @@ fun UserAvatar(user: LocalUser) {
             .build(),
             contentDescription = user.login,
             contentScale = ContentScale.Fit,
-            modifier = Modifier
-                .width(40.dp)
-                .height(40.dp)
-                .clip(CircleShape)
+            modifier = userAvatarModifier
         )
 }
 
@@ -125,9 +114,13 @@ fun UserLoginName(user: LocalUser) {
         color = Color.Black,
         fontSize = 18.sp,
         fontWeight = FontWeight.Normal,
-        modifier = Modifier
-            .fillMaxSize()
-            .wrapContentHeight(CenterVertically)
-            .padding(start = 10.dp)
+        modifier = userLoginNameModifier
     )
 }
+
+private val columnModifier = Modifier.padding(10.dp).background(Color.White)
+private val cardModifier = Modifier.padding(bottom = 20.dp)
+private val userCardModifier = Modifier.height(40.dp).fillMaxWidth().background(Color.White)
+private val userAvatarModifier = Modifier.width(40.dp).height(40.dp).clip(CircleShape)
+private val userLoginNameModifier = Modifier.fillMaxSize().wrapContentHeight(CenterVertically)
+    .padding(start = 10.dp)
