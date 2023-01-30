@@ -1,10 +1,10 @@
 # Github-Api-Sample-App
 This is a sample Android app that:
 1. Displays users avatars and logins from https://api.github.com/users
-2. Upon clicking on a user, displays the user's repositories and some details from https://api.github.com/users/{login}/repos
-3. Saves all data on the device. So on next visits, the data is loaded in this order: loader &rarr; data from database &rarr; data from API
+2. Clicking on a user, displays the user's repositories and some details from https://api.github.com/users/{login}/repos. Clicking on a repository, transfers the user to the repository at github.com.
+3. All data is saved on the device. So on next visits, the data is loaded in this order: loader &rarr; data from database &rarr; data from API
 
-**Note**: Checkout tdd branch for a test-driven development approach.
+**Note**: Checkout the tdd branch for a test-driven development approach.
 
 This sample is implemented using the following stack:
 * Kotlin + Coroutines + StateFlow
