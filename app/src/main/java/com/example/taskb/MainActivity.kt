@@ -1,8 +1,10 @@
 package com.example.taskb
 
+import Motrack
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -17,6 +19,7 @@ import com.example.taskb.ui.screens.UserDetailsScreen
 import com.example.taskb.ui.theme.TaskBTheme
 import com.example.taskb.ui.viewmodel.MainViewModel
 import com.example.taskb.ui.viewmodel.UserDetailsViewModel
+import com.motrack.sdk.MotrackEvent
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,11 +38,18 @@ class MainActivity : ComponentActivity() {
                     NavHost(navController = navController, startDestination = Routes.Home.route) {
                         composable(Routes.Home.route) {
                             MainScreen(mainViewModel)
-                                { login -> navController.navigate("user_details/$login") }
+                                { login ->
+                                    Log.d("Motrack", "id clicked")
+                                    val event = MotrackEvent("FrDh5HKm")
+                                    Motrack.trackEvent(event)
+                                    navController.navigate("user_details/$login") }
                         }
                         composable(Routes.Repos.route) {
                             val userDetailsViewModel = hiltViewModel<UserDetailsViewModel>()
                             UserDetailsScreen(userDetailsViewModel, { htmlUrl ->
+                                Log.d("Motrack", "user repo clicked")
+                                val revenueEvent = MotrackEvent("2AvzWR4d")
+                                Motrack.trackEvent(revenueEvent)
                                 startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(htmlUrl)))
                             }) {
                                 navController.navigateUp()
